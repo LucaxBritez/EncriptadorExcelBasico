@@ -14,7 +14,7 @@ encriptara los datos de la segunda, y volvera a guardar los datos ya encriptados
 public class Main {
     public static void main(String[] args) {
         try{
-            //Mensaje inicial.
+            //Mensaje inicial(Solicitud direccion inicial).
             String solicitudPathInicial = "Porfavor ingrese la dirección del archivo a encriptar" +
                     ",esto incluye el nombre del mismo y su extension(xlsx).";
             System.out.println(solicitudPathInicial);
@@ -39,7 +39,7 @@ public class Main {
             String usuario = "";
             String password;
 
-            //While inicial, se utiliza para recorrer las columnas.
+            //While inicial, se utiliza para recorrer las filas.
             while(rowItr.hasNext()){
                 Row row = rowItr.next();
                 Iterator<Cell> cellIterator = row.cellIterator();
@@ -69,6 +69,7 @@ public class Main {
             }
             System.out.println("-----Se termino de procesar el archivo----- \n\n");
 
+            //Mensaje final(Solicitud direccion de destino)
             String pathDestino;
             String solicitudPathDestino = "Porfavor ingrese la direccion en la cual desee guardar el archivo encriptado" +
                     "y el nombre que desea que tenga el archivo encriptado junto con su extension(xlsx).";
@@ -76,13 +77,18 @@ public class Main {
             Scanner pathDestinoTipeado = new Scanner(System.in);
             pathDestino = pathDestinoTipeado.nextLine();
 
+            //Creacion del archivo destino.
             File filePathOut = new File(pathDestino);
+            //Instanciado de los elementos necesarios dentro del excel destino.
             XSSFWorkbook workbookOut = new XSSFWorkbook();
             XSSFSheet sheetOut = workbookOut.createSheet("Hoja 1");
 
             int contadorCell = 0;
             int contadorRow  = 0;
 
+            /*Bucle for que itera sobre las filas y las celdas del excel destino, ademas de asignar
+                los datos pertinentes a la columna usuarios y la columna contraseñas.
+            * */
             for(HashMap.Entry<String, String> m : map.entrySet()){
                 Row rowOut = sheetOut.createRow(contadorRow);
                 rowOut.createCell(contadorCell).setCellValue(m.getKey());
@@ -92,6 +98,7 @@ public class Main {
                 contadorCell--;
             }
 
+            //Emision de los datos depositados en el workbook destino hacia el nuevo archivo excel.
             FileOutputStream fileOut = new FileOutputStream(filePathOut);
             workbookOut.write(fileOut);
             fileOut.close();
